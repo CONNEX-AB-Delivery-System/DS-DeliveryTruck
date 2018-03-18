@@ -1,4 +1,4 @@
-# Template project with Gradle
+# Package Handling System / Delivery Truck project with Gradle
 
 ## Why
 

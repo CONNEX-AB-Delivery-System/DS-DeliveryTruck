@@ -1,13 +1,19 @@
 package base;
 
-//import ev3dev.actuators.lego.motors.EV3LargeRegulatedMotor;
-//import ev3dev.actuators.lego.motors.EV3MediumRegulatedMotor;
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 import ev3dev.sensors.Battery;
-import lejos.robotics.SampleProvider;
+import lejos.hardware.port.MotorPort;
+import ev3dev.actuators.lego.motors.EV3LargeRegulatedMotor;
+import ev3dev.actuators.lego.motors.EV3MediumRegulatedMotor;
+
 import lejos.hardware.port.SensorPort;
 import ev3dev.sensors.ev3.EV3UltrasonicSensor;
+
 //import lejos.hardware.sensor.MindsensorsLineLeader;
-//import lejos.hardware.port.MotorPort;
+import lejos.robotics.SampleProvider;
 import ev3dev.sensors.BaseSensor;
 import lejos.hardware.port.Port;
 import lejos.utility.Delay;
@@ -15,28 +21,115 @@ import lejos.utility.Delay;
 
 public class DeliveryTruck {
 
-    //System.out.println("Creating Motor A & B");
-    //motor for steering
-    //final EV3MediumRegulatedMotor motorLeft = new EV3MediumRegulatedMotor(MotorPort.A);
-    //motor for driving
-    //final EV3MediumRegulatedMotor motorRight = new EV3MediumRegulatedMotor(MotorPort.B);
-    //motor for crane rotation
-    //motor for crane lifting
-    //motor for grabber
-
-    //sensor for line reading
-    //sensor for proximity
-    private static EV3UltrasonicSensor sensorProxmity = new EV3UltrasonicSensor(SensorPort.S3);
-    //private static MindsensorsLineLeader lineReader = new MindsensorsLineLeader(SensorPort.S4);
-    private static BaseSensor lineReader = new BaseSensor(SensorPort.S4, "RAW", "ms-line-leader 0x01");
-
     //Configuration
     private static int HALF_SECOND = 500;
 
-    public static void main(final String[] args){
+    static boolean isRunning = true;
+
+    //System.out.println("Creating Motor A & B");
+    //motor for drive forwards and backwards - connected to motor port A
+    static EV3MediumRegulatedMotor motorDrive;
+    //motor for steering - connected to motor port B
+    static EV3MediumRegulatedMotor motorSteer;
+    //motor for crane rotation connected to motor port C
+    static EV3LargeRegulatedMotor craneRotation;
+
+    //motor multiplexer connected to sensor port S1
+    //motor for crane lifting - multiplexer port M1
+    //??
+    //motor for grabber - multiplexer port M1
+    //??
+
+    //sensor for line reading - connected to sensor port S2
+    //private static MindsensorsLineLeader lineReader = new MindsensorsLineLeader(SensorPort.S4);
+    //private static BaseSensor lineReader = new BaseSensor(SensorPort.S4, "RAW", "ms-line-leader 0x01");
+    //sensor for proximity
+    static EV3UltrasonicSensor sensorProximity;
+
+
+    public static void main(final String[] args) throws IOException {
+
+        DeliveryTruck.motorDrive = new EV3MediumRegulatedMotor(MotorPort.B);
+        DeliveryTruck.motorSteer = new EV3MediumRegulatedMotor(MotorPort.A);
+        //DeliveryTruck.craneRotation = new EV3LargeRegulatedMotor(MotorPort.C);
+        System.out.println("Motors initialized");
+
+        DeliveryTruck.sensorProximity = new EV3UltrasonicSensor(SensorPort.S3);
+        DeliveryTruck.sensorProximity.enable();
+        System.out.println("Sensors initialized");
 
         System.out.println("Votage: " + Battery.getInstance().getVoltage());
-        SampleProvider sp;
+
+
+        //https://docs.oracle.com/javase/7/docs/api/java/net/ServerSocket.html
+        ServerSocket serv = new ServerSocket(19231);
+
+        Socket socket = serv.accept();
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                socket.getInputStream()));
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+                socket.getOutputStream()));
+
+        String outputValue = socket.getLocalSocketAddress().toString();
+
+        writer.write(outputValue+"\n");writer.flush();
+
+        String line;
+        while (isRunning) {
+            line = reader.readLine();
+            System.out.println("RECIEVED " + line);
+
+            switch (line) {
+                case "LEFT-PRESS":
+                    motorSteer.rotate(180, true);
+                    //motorSteer.setAcceleration(50);
+                    //motorSteer.backward();
+                    break;
+                case "LEFT-RELEASE":
+                    motorSteer.stop(true);
+                    break;
+                case "RIGHT-PRESS":
+                    motorSteer.rotate(-180, true);
+                    //motorSteer.setSpeed(200);
+                    //motorSteer.setAcceleration(50);
+                    //motorSteer.forward();
+                    break;
+                case "RIGHT-RELEASE":
+                    motorSteer.stop(true);
+                    break;
+                case "STOP":
+                    isRunning = false;
+                    outputValue = "shutting down";
+                    writer.write(outputValue+"\n");writer.flush();
+                    break;
+            }
+        }
+
+        //normal shutdown
+        socket.close();
+
+        DeliveryTruck.motorDrive.stop();
+        DeliveryTruck.motorSteer.stop();
+        DeliveryTruck.sensorProximity.disable();
+
+        System.out.println("Checking Battery before shutdown");
+        System.out.println("Votage: " + Battery.getInstance().getVoltage());
+
+        System.exit(0);
+
+        //final int motorSpeed = 500;
+        //DeliveryTruck.motorDrive.setSpeed(motorSpeed);
+
+        //Delay.msDelay(3000);
+
+        //DeliveryTruck.motorDrive.forward();
+
+        //Delay.msDelay(3000);
+
+        //DeliveryTruck.motorDrive.stop();
+
+        /*SampleProvider sp;
 
         int distanceValue = 0;
 
@@ -68,7 +161,7 @@ public class DeliveryTruck {
 
             //System.out.println("" + sp2);
 
-        }
+        } */
 
         //lineReader.sleep();
 
@@ -76,15 +169,21 @@ public class DeliveryTruck {
 
 
         //To Stop the motor in case of pkill java for example
-       /* Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+       Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
                 System.out.println("Emergency Stop");
-                motorLeft.stop();
-                motorRight.stop();
+                DeliveryTruck.motorDrive.stop();
+                DeliveryTruck.motorSteer.stop();
+                DeliveryTruck.sensorProximity.disable();
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }));
 
-        System.out.println("Defining the Stop mode");
+        /*System.out.println("Defining the Stop mode");
         motorLeft.brake();
         motorRight.brake();
 
@@ -126,9 +225,7 @@ public class DeliveryTruck {
         motorLeft.stop();
         motorRight.stop(); */
 
-        System.out.println("Checking Battery");
-        System.out.println("Votage: " + Battery.getInstance().getVoltage());
-
-        System.exit(0);
+        //System.out.println("Checking Battery");
+        //System.out.println("Votage: " + Battery.getInstance().getVoltage());
     }
 }

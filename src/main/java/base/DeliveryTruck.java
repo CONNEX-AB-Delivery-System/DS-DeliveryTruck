@@ -65,7 +65,7 @@ public class DeliveryTruck {
 
         System.out.println("Sensors initialized");
 
-        System.out.println("Votage: " + Battery.getInstance().getVoltage());
+        System.out.println("Voltage: " + Battery.getInstance().getVoltage());
 
 
         //https://docs.oracle.com/javase/7/docs/api/java/net/ServerSocket.html
@@ -122,7 +122,7 @@ public class DeliveryTruck {
         DeliveryTruck.sensorProximity.disable();
 
         System.out.println("Checking Battery before shutdown");
-        System.out.println("Votage: " + Battery.getInstance().getVoltage());
+        System.out.println("Voltage: " + Battery.getInstance().getVoltage());
 
         System.exit(0);
 
@@ -234,6 +234,6 @@ public class DeliveryTruck {
         motorRight.stop(); */
 
         //System.out.println("Checking Battery");
-        //System.out.println("Votage: " + Battery.getInstance().getVoltage());
+        //System.out.println("Voltage: " + Battery.getInstance().getVoltage());
     }
 }

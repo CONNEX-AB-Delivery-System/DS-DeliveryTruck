@@ -49,13 +49,20 @@ public class DeliveryTruck {
 
     public static void main(final String[] args) throws IOException {
 
-        DeliveryTruck.motorDrive = new EV3MediumRegulatedMotor(MotorPort.B);
-        DeliveryTruck.motorSteer = new EV3MediumRegulatedMotor(MotorPort.A);
+        //DeliveryTruck.motorDrive = new EV3MediumRegulatedMotor(MotorPort.C);
+        DeliveryTruck.motorSteer = new EV3MediumRegulatedMotor(MotorPort.B);
         //DeliveryTruck.craneRotation = new EV3LargeRegulatedMotor(MotorPort.C);
         System.out.println("Motors initialized");
 
-        DeliveryTruck.sensorProximity = new EV3UltrasonicSensor(SensorPort.S3);
-        DeliveryTruck.sensorProximity.enable();
+        //DeliveryTruck.sensorProximity = new EV3UltrasonicSensor(SensorPort.S3);
+        //DeliveryTruck.sensorProximity.enable();
+        LineReaderV2 lineReader = new LineReaderV2(SensorPort.S1);
+
+        int value = lineReader.getPIDValue();
+
+        System.out.println("Current value" + value);
+
+
         System.out.println("Sensors initialized");
 
         System.out.println("Votage: " + Battery.getInstance().getVoltage());
@@ -82,6 +89,7 @@ public class DeliveryTruck {
 
             switch (line) {
                 case "LEFT-PRESS":
+                    System.out.println("RECIEVED LEFT-PRESS " + line);
                     motorSteer.rotate(180, true);
                     //motorSteer.setAcceleration(50);
                     //motorSteer.backward();

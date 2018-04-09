@@ -66,4 +66,4 @@ Hint: value0 -> value(0) in Java.
 
 ## Network
 
-If necessary, to set-up wifi, you can access robot through ssh and then use "connman", described here:  https://wiki.archlinux.org/index.php/ConnMan#Connecting_to_eduroam_.28802.1X.29
+If necessary, to set-up wifi, you can access robot through ssh and then use "connman", described here (Section: Connecting to an open access point):  https://wiki.archlinux.org/index.php/ConnMan#Connecting_to_eduroam_.28802.1X.29

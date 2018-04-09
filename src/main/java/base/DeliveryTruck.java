@@ -28,11 +28,11 @@ public class DeliveryTruck {
 
     //System.out.println("Creating Motor A & B");
     //motor for drive forwards and backwards - connected to motor port A
-    static EV3MediumRegulatedMotor motorDrive;
+    public static EV3MediumRegulatedMotor motorDrive;
     //motor for steering - connected to motor port B
-    static EV3MediumRegulatedMotor motorSteer;
+    public static EV3MediumRegulatedMotor motorSteer;
     //motor for crane rotation connected to motor port C
-    static EV3LargeRegulatedMotor craneRotation;
+    //private static EV3LargeRegulatedMotor craneRotation;
 
     //motor multiplexer connected to sensor port S1
     //motor for crane lifting - multiplexer port M1
@@ -41,35 +41,50 @@ public class DeliveryTruck {
     //??
 
     //sensor for line reading - connected to sensor port S2
-    //private static MindsensorsLineLeader lineReader = new MindsensorsLineLeader(SensorPort.S4);
-    //private static BaseSensor lineReader = new BaseSensor(SensorPort.S4, "RAW", "ms-line-leader 0x01");
+    public static LineReaderV2 lineReader;
     //sensor for proximity
     static EV3UltrasonicSensor sensorProximity;
 
 
     public static void main(final String[] args) throws IOException {
+        double minVoltage = 7.500;
 
-        //DeliveryTruck.motorDrive = new EV3MediumRegulatedMotor(MotorPort.C);
-        DeliveryTruck.motorSteer = new EV3MediumRegulatedMotor(MotorPort.B);
+        //Always check if battery voltage is enougth
+        System.out.println("Battery Voltage: " + Battery.getInstance().getVoltage());
+        System.out.println("Battery Current: " + Battery.getInstance().getBatteryCurrent());
+        if (Battery.getInstance().getVoltage() < minVoltage) {
+            System.out.println("Battery voltage to low, shutdown");
+            System.exit(0);
+        }
+
+        motorDrive = new EV3MediumRegulatedMotor(MotorPort.C);
+        motorSteer = new EV3MediumRegulatedMotor(MotorPort.B);
         //DeliveryTruck.craneRotation = new EV3LargeRegulatedMotor(MotorPort.C);
         System.out.println("Motors initialized");
 
-        //DeliveryTruck.sensorProximity = new EV3UltrasonicSensor(SensorPort.S3);
-        //DeliveryTruck.sensorProximity.enable();
-        LineReaderV2 lineReader = new LineReaderV2(SensorPort.S1);
-
-        int value = lineReader.getPIDValue();
-
-        System.out.println("Current value" + value);
-
-
+        lineReader = new LineReaderV2(SensorPort.S1);
         System.out.println("Sensors initialized");
 
-        System.out.println("Voltage: " + Battery.getInstance().getVoltage());
+        //motorDrive.rotate(720);
+
+        //open thread for socket server to listen/send commands to SCS
+        DTServer serverThread = new DTServer( "ServerThread-1");
+        serverThread.setDaemon(true);
+        serverThread.start();
+
+        //open thread for executing task
+        //TODO: start only after SCS has send command
+        DTRun runThread = new DTRun( "RunThread-1");
+        runThread.setDaemon(false);
+        runThread.start();
+
+
+
+        System.exit(0);
 
 
         //https://docs.oracle.com/javase/7/docs/api/java/net/ServerSocket.html
-        ServerSocket serv = new ServerSocket(19231);
+        /*ServerSocket serv = new ServerSocket(19231);
 
         Socket socket = serv.accept();
 
@@ -124,7 +139,7 @@ public class DeliveryTruck {
         System.out.println("Checking Battery before shutdown");
         System.out.println("Voltage: " + Battery.getInstance().getVoltage());
 
-        System.exit(0);
+        System.exit(0); */
 
         //final int motorSpeed = 500;
         //DeliveryTruck.motorDrive.setSpeed(motorSpeed);
@@ -177,7 +192,7 @@ public class DeliveryTruck {
 
 
         //To Stop the motor in case of pkill java for example
-       Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+       /*Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
                 System.out.println("Emergency Stop");
                 DeliveryTruck.motorDrive.stop();
@@ -189,7 +204,7 @@ public class DeliveryTruck {
                     e.printStackTrace();
                 }
             }
-        }));
+        })); */
 
         /*System.out.println("Defining the Stop mode");
         motorLeft.brake();

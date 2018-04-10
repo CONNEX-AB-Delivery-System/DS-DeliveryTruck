@@ -1,15 +1,14 @@
 package base;
 
-import lejos.hardware.port.MotorPort;
-import ev3dev.actuators.lego.motors.EV3MediumRegulatedMotor;
-
-import lejos.hardware.port.SensorPort;
-import ev3dev.sensors.ev3.EV3UltrasonicSensor;
-
 import lejos.robotics.SampleProvider;
 import ev3dev.sensors.BaseSensor;
 import lejos.hardware.port.Port;
 import lejos.utility.Delay;
+//TODO: Do we need those imports?
+
+import static base.DeliveryTruck.motorSteer;
+import static base.DeliveryTruck.motorDrive;
+//TODO: Do we need those imports?
 
 
 class DTRun extends Thread {
@@ -18,38 +17,62 @@ class DTRun extends Thread {
 
 
 
-    DTRun ( String name) {
-        threadName = name;
-        System.out.println("Creating " +  threadName );
+    DTRun ( String threadName) {
+        this.threadName = threadName;
+        System.out.println("Creating " +  this.threadName );
+    }
+
+    private boolean runMotors() {
+        try {
+            //System.out.println("Current value" + DeliveryTruck.lineReader.getPIDValue());
+
+            /*DeliveryTruck.motorSteer.brake();
+            System.out.println("Steer right " +  this.threadName );
+            DeliveryTruck.motorSteer.setSpeed(100);
+            DeliveryTruck.motorSteer.forward();
+            Thread.sleep(200);
+            DeliveryTruck.motorSteer.stop();
+
+            System.out.println("Steer left " +  this.threadName );
+            DeliveryTruck.motorSteer.setSpeed(100);
+            DeliveryTruck.motorSteer.backward();
+            Thread.sleep(200);
+            DeliveryTruck.motorSteer.stop();
+
+            System.out.println("Drive motor " +  this.threadName );
+            DeliveryTruck.motorDrive.setSpeed(300);
+            DeliveryTruck.motorDrive.backward();
+            Thread.sleep(500);
+            DeliveryTruck.motorDrive.stop();*/
+
+            Thread.sleep(50);
+
+            System.out.println("Rotate motor " +  this.threadName );
+            DeliveryTruck.motorSteer.rotateTo(15, true);
+            Thread.sleep(500);
+            System.out.println("Rotate motor 2 " +  this.threadName );
+            DeliveryTruck.motorSteer.rotateTo(-20, true);
+            Thread.sleep(100);
+
+        } catch (InterruptedException e) {
+            System.out.println("Thread " +  this.threadName + " interrupted.");
+        }
+
+        return true;
     }
 
     public void run() {
-        System.out.println("Running " +  threadName );
+        System.out.println("Running " +  this.threadName );
 
-        //DeliveryTruck.motorDrive.brake();
-        //DeliveryTruck.motorDrive.rotate(720);
+        this.runMotors();
 
-        //DeliveryTruck.sensorProximity = new EV3UltrasonicSensor(SensorPort.S3);
-        //DeliveryTruck.sensorProximity.enable();
-
-        System.out.println("Current value" + DeliveryTruck.lineReader.getPIDValue());
-
-        //DeliveryTruck.motorSteer.rotate(45);
-        //DeliveryTruck.motorSteer.rotate(-45);
-
-
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            System.out.println("Thread " +  threadName + " interrupted.");
-        }
-        System.out.println("Thread " +  threadName + " exiting.");
+        System.out.println("Thread " +  this.threadName + " exiting.");
     }
 
     public void start () {
-        System.out.println("Starting " +  threadName );
+        System.out.println("Starting " +  this.threadName );
         if (t == null) {
-            t = new Thread (this, threadName);
+            t = new Thread (this, this.threadName);
             t.start ();
         }
     }

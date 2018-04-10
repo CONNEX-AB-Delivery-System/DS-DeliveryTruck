@@ -52,13 +52,13 @@ In order to modify the example, current full APIs are:
 
 http://ev3dev-lang-java.github.io/docs/api/latest/index.html
 
-You mostly will use EV3 Sensors in package: ev3dev.sensors.ev3
-And classes: EV3ColorSensor, EV3IRSensor, EV3TouchSensor, EV3UltrasonicSensor
-*note: we also will use custom LineReaderV2 class, documentation here: TODO: LINK
+You mostly will use EV3 Sensors in package: ev3dev.sensors.ev3 <br />
+And classes: EV3ColorSensor, EV3IRSensor, EV3TouchSensor, EV3UltrasonicSensor <br />
+*note: we also will use custom LineReaderV2 class, documentation here: TODO: LINK <br />
 
 
-You mostly will use EV3 Motors in package: ev3dev.actuators.lego.motors
-And classes: EV3LargeRegulatedMotor, EV3MediumRegulatedMotor
+You mostly will use EV3 Motors in package: ev3dev.actuators.lego.motors <br />
+And classes: EV3LargeRegulatedMotor, EV3MediumRegulatedMotor 
 
 
 

@@ -58,7 +58,7 @@ And classes: EV3ColorSensor, EV3IRSensor, EV3TouchSensor, EV3UltrasonicSensor <b
 
 
 You mostly will use EV3 Motors in package: ev3dev.actuators.lego.motors <br />
-And classes: EV3LargeRegulatedMotor, EV3MediumRegulatedMotor 
+And classes: EV3LargeRegulatedMotor, EV3MediumRegulatedMotor
 
 
 
@@ -70,10 +70,14 @@ https://github.com/ev3dev-lang-java/examples
 
 ## Sensors and Motors
 
-For sensor and motor capabilities you can learn here: http://docs.ev3dev.org/en/ev3dev-jessie/ and   http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-jessie/sensor_data.html and http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-jessie/motor_data.html
+For ev3dev OS capabilities on EV3Brick and BrickPI3 you can read here: http://docs.ev3dev.org/en/ev3dev-jessie/
+
+For sensor capabilities you can learn here: http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-jessie/sensor_data.html
+
+For motor capabilities you can learn here: http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-jessie/motor_data.html
 
 Hint: value0 -> value(0) in Java.
 
 ## Network
 
-If necessary, to set-up wifi, you can access robot through ssh and then use "connman", described here (Section: Connecting to an open access point):  https://wiki.archlinux.org/index.php/ConnMan#Connecting_to_eduroam_.28802.1X.29
+If necessary, to set-up wifi, you can access robot through ssh and then use "connman", described here (Section: Connecting to an open access point):  https://wiki.archlinux.org/index.php/ConnMan#Connecting_to_an_open_access_point

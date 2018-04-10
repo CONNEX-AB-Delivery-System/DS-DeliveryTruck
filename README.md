@@ -48,9 +48,19 @@ to see how it is done, follow this link: http://ev3dev-lang-java.github.io/docs/
 
 ## Modify the example
 
-In order to modify the example, current APIs are:
+In order to modify the example, current full APIs are:
 
 http://ev3dev-lang-java.github.io/docs/api/latest/index.html
+
+You mostly will use EV3 Sensors in package: ev3dev.sensors.ev3
+And classes: EV3ColorSensor, EV3IRSensor, EV3TouchSensor, EV3UltrasonicSensor
+*note: we also will use custom LineReaderV2 class, documentation here: TODO: LINK
+
+
+You mostly will use EV3 Motors in package: ev3dev.actuators.lego.motors
+And classes: EV3LargeRegulatedMotor, EV3MediumRegulatedMotor
+
+
 
 ## Examples
 

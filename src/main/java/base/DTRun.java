@@ -34,6 +34,9 @@ class DTRun extends Thread {
 
         System.out.println("Current value" + DeliveryTruck.lineReader.getPIDValue());
 
+        //DeliveryTruck.motorSteer.rotate(45);
+        //DeliveryTruck.motorSteer.rotate(-45);
+
 
         try {
             Thread.sleep(50);

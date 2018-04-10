@@ -67,6 +67,9 @@ public class DeliveryTruck {
 
         //motorDrive.rotate(720);
 
+        motorSteer.rotateTo(45, true);
+        motorSteer.rotateTo(-45, true);
+
         //open thread for socket server to listen/send commands to SCS
         DTServer serverThread = new DTServer( "ServerThread-1");
         serverThread.setDaemon(true);

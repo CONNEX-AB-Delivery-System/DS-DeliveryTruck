@@ -30,6 +30,7 @@ public class DTThreadPooledServer implements Runnable{
             this.runningThread = Thread.currentThread();
         }
         openServerSocket();
+        System.out.println("Server Started.") ;
         while(! isStopped()){
             Socket clientSocket = null;
             try {

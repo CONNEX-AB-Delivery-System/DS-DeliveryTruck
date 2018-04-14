@@ -21,35 +21,36 @@ public class WorkerRunnable implements Runnable{
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
                     clientSocket.getOutputStream()));
 
-
-            //System.out.println(reader.readLine());
             String outputValue = clientSocket.getLocalSocketAddress().toString();
 
             writer.write(outputValue+"\n");writer.flush();
-            /*InputStream input  = clientSocket.getInputStream();
-            OutputStream output = clientSocket.getOutputStream(); */
+
             long time = System.currentTimeMillis();
             /*output.write(("HTTP/1.1 200 OK\n\nWorkerRunnable: " +
                     this.serverText + " - " +
                     time +
-                    "").getBytes());
-            output.close();
-            input.close(); */
-
+                    "").getBytes());*/
 
             String line;
             while (DeliveryTruck.isRunning) {
                 line = reader.readLine();
+                //System.out.println("RECIEVED " + line);
                 switch (line) {
-                    case "LEFT-PRESS":
+                    case "RUN":
+                        DeliveryTruck.inputCommandSCS = line;
                         System.out.println("RECIEVED " + line);
+                        break;
+                    case "LEFT-PRESS":
+                        DeliveryTruck.inputCommandSCS = line;
                         break;
                     case "STOP":
-                        System.out.println("RECIEVED " + line);
-                        //outputValue = "shutting down";
-                        //writer.write(outputValue+"\n");writer.flush();
+                        DeliveryTruck.inputCommandSCS = line;
                         DeliveryTruck.isRunning = false;
                         break;
+                }
+
+                if (!DeliveryTruck.outputCommandSCS.equals("none")) {
+                    writer.write(DeliveryTruck.outputCommandSCS+"\n");writer.flush();
                 }
             }
             reader.close();

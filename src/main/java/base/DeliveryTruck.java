@@ -19,13 +19,23 @@ import lejos.hardware.port.Port;
 import lejos.utility.Delay;
 
 
+
+
 public class DeliveryTruck {
 
     //Configuration
     private static int HALF_SECOND = 500;
 
     //TODO: synhronize isRunning variable between threads
+    //Synchronization variables between threads to allow intra thread communication
+    //Main variable for stopping execution
     static boolean isRunning = true;
+    //Variables for commands from/to SCS
+    static String inputCommandSCS = "";
+    static String outputCommandSCS = "none";
+    //Variables for controlling task thread
+    static boolean runThreadIsStarted = false;
+    static boolean runThreadIsExecuted = false;
 
     //System.out.println("Creating Motor A & B");
     //motor for drive forwards and backwards - connected to motor port A
@@ -46,9 +56,14 @@ public class DeliveryTruck {
     public static LineReaderV2 lineReader;
     //sensor for proximity - connect to sensor port TODO: X
     public static EV3UltrasonicSensor sensorProximity;
+    //sensor for crane rotation movement detection  
+    public static EV3TouchSensor touchSensor;
 
 
     public static void main(final String[] args) throws IOException {
+        // getting reference to Main thread
+        Thread t = Thread.currentThread();
+
         double minVoltage = 7.200;
 
         //Always check if battery voltage is enougth
@@ -59,64 +74,52 @@ public class DeliveryTruck {
             System.exit(0);
         }
 
+        //initalize all motors here
         motorDrive = new EV3LargeRegulatedMotor(MotorPort.C);
         motorSteer = new EV3MediumRegulatedMotor(MotorPort.A);
         System.out.println("Motor initialized");
-        //lineReader = new LineReaderV2(SensorPort.S1);
-        //DeliveryTruck.sensorProximity = new EV3UltrasonicSensor(SensorPort.S3);
+        //initalize all sensors here
+        lineReader = new LineReaderV2(SensorPort.S1);
+        sensorProximity = new EV3UltrasonicSensor(SensorPort.S3);
         //DeliveryTruck.sensorProximity.enable();
-        //System.out.println("Sensors initialized");
-
-
-        /*motorSteer.rotate(45, true);
-        motorSteer.rotate(-45, true);
-        motorDrive.rotate(180, true);*/
-        //TODO: what is wrong with rotate function on Delivery Truck ?
+        System.out.println("Sensors initialized");
 
         //open thread for socket server to listen/send commands to SCS
         DTThreadPooledServer server = new DTThreadPooledServer("ServerThread-1", 8000);
         new Thread(server).start();
 
-        //open thread for executing task
-        //TODO: start only after SCS has send command
-        DTRun runThread = new DTRun( "RunThread-1");
-        //runThread.setDaemon(false);
-        runThread.start();
-
         while (isRunning) {
-            //System.out.println(isRunning);
-            /*try {
-                Thread.sleep(5000);
-                DeliveryTruck.isRunning = false;
-            } catch (InterruptedException x) {
 
-            }*/
-
-            try {
-                Thread.sleep(30 * 1000);
-                DeliveryTruck.isRunning = false;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            //check if have recieved command from SCS and have not executed run thread before
+            if (inputCommandSCS.equals("RUN") && (runThreadIsStarted == false)) {
+                //open thread for executing task
+                //TODO: start only after SCS has send command
+                DTRun runThread = new DTRun( "RunThread-1");
+                //runThread.setDaemon(false);
+                runThreadIsStarted = true;
+                runThread.start();
             }
-            System.out.println("Stopping Server");
-            server.stop();
+
+            //wait till run thread is executed
+            if (runThreadIsExecuted == false) {
+                //TODO: not sure about this
+                try {
+                    //stop if no connection from SCS after 30 seconds
+                    Thread.sleep(1 * 1000);
+                    //DeliveryTruck.isRunning = false;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
+        System.out.println("Stopping Server");
+        server.stop();
 
-
-        //serverThread.interrupt();
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         //motorSteer.close();
         //motorDrive.close();
 
         System.exit(0);
-
-
 
 
         /*
@@ -153,30 +156,7 @@ public class DeliveryTruck {
             }
         }
 
-        //normal shutdown
-        socket.close();
 
-        DeliveryTruck.motorDrive.stop();
-        DeliveryTruck.motorSteer.stop();
-        DeliveryTruck.sensorProximity.disable();
-
-        System.out.println("Checking Battery before shutdown");
-        System.out.println("Voltage: " + Battery.getInstance().getVoltage());
-
-        System.exit(0); */
-
-        //final int motorSpeed = 500;
-        //DeliveryTruck.motorDrive.setSpeed(motorSpeed);
-
-        //Delay.msDelay(3000);
-
-        //DeliveryTruck.motorDrive.forward();
-
-        //Delay.msDelay(3000);
-
-        //DeliveryTruck.motorDrive.stop();
-
-        /*SampleProvider sp;
 
         int distanceValue = 0;
 
@@ -210,12 +190,8 @@ public class DeliveryTruck {
 
         } */
 
-        //lineReader.sleep();
 
-        //System.out.println(Battery.getInstance().getVoltage());
-
-
-        //To Stop the motor in case of pkill java for example
+        //TODO:To Stop the motor in case of pkill java for example
        /*Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
                 System.out.println("Emergency Stop");
@@ -230,49 +206,5 @@ public class DeliveryTruck {
             }
         })); */
 
-        /*System.out.println("Defining the Stop mode");
-        motorLeft.brake();
-        motorRight.brake();
-
-        System.out.println("Defining motor speed");
-        final int rotateTo = 10;
-        final int motorSpeed = 300;
-        //motorLeft.rotateTo(rotateTo);
-        motorLeft.setSpeed(motorSpeed);
-        motorRight.setSpeed(motorSpeed);
-
-        motorLeft.getSpeed()
-
-        if (motorLeft.getSpeed() > 200) then {motorLeft.stop()} else {}
-
-
-        {
-            motorLeft.forward();
-
-        }
-        while (sensorX.getValue() > 200)
-
-        System.out.println("Go Forward with the motors");
-        motorLeft.forward();
-        //motorRight.backward();
-
-        Delay.msDelay(2000);
-
-        System.out.println("Stop motors");
-        motorLeft.stop();
-        motorRight.stop();
-
-        System.out.println("Go Backward with the motors");
-        motorLeft.backward();
-        //motorRight.forward();
-
-        Delay.msDelay(2000);
-
-        System.out.println("Stop motors");
-        motorLeft.stop();
-        motorRight.stop(); */
-
-        //System.out.println("Checking Battery");
-        //System.out.println("Voltage: " + Battery.getInstance().getVoltage());
     }
 }

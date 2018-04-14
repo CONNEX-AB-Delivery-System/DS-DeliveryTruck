@@ -7,8 +7,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
+ *  Title: DTThreadPooledServer
+ *
+ *  Implements Pooled Server as in:
+ *
  *  //https://docs.oracle.com/javase/7/docs/api/java/net/ServerSocket.html
  *  //http://tutorials.jenkov.com/java-multithreaded-servers/thread-pooled-server.html
+ *
+ *  NOTE: Nothing should be changed in this class.
  */
 
 public class DTThreadPooledServer implements Runnable{

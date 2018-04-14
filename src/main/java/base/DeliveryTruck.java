@@ -18,6 +18,15 @@ import ev3dev.sensors.BaseSensor;
 import lejos.hardware.port.Port;
 import lejos.utility.Delay;
 
+/**
+ * Title: DeliveryTruck
+ *
+ * Main class for Delivery truck. Does all "dirty" stuff of initializing EV3 Motors and Sensors.
+ * Also starts serverSocket thread and respective Socket connections from SCS.
+ * After command "run" from SCS starts DTRun thread execution.
+ *
+ * NOTE: Nothing should be changed in this class.
+ */
 
 
 
@@ -56,7 +65,7 @@ public class DeliveryTruck {
     public static LineReaderV2 lineReader;
     //sensor for proximity - connect to sensor port TODO: X
     public static EV3UltrasonicSensor sensorProximity;
-    //sensor for crane rotation movement detection  
+    //sensor for crane rotation movement detection
     public static EV3TouchSensor touchSensor;
 
 

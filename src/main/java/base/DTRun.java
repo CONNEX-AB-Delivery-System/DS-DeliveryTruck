@@ -11,6 +11,13 @@ import lejos.utility.Delay;
 //TODO: Do we need those imports?
 
 
+/**
+ *  Title: DTRun thread
+ *
+ *  This is thread where all truck logic for task execution should be implemented.
+ *  Use function method to do that (it can be extended with other functions).
+ */
+
 class DTRun extends Thread {
     private Thread t;
     private String threadName;

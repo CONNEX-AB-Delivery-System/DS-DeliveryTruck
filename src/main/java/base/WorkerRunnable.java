@@ -3,6 +3,13 @@ package base;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ *  Title WorkerRunnable
+ *
+ *  Implements single socket connection via thread that listens to SCS commands and sends commands to SCS.
+ *
+ *  NOTE: Nothing should be changed in this class.
+ */
 
 public class WorkerRunnable implements Runnable{
 

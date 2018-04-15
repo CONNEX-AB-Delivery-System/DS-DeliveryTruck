@@ -2,14 +2,13 @@
 
 ## About this project
 
-This repository stores a template project about `Delivery Truck`. You need to use this project to get started.
+This repository stores a template project about `Delivery Truck`. You will use this project to get started and will add your developed software to this project. 
 
 ## Getting Started
 
 Once you download in your computer the project, open Java IDE [IntelliJ](https://www.jetbrains.com/idea/))
 to import this [Gradle](https://gradle.org/) project. The project includes latest dependencies and
 an example ready to be deployed on Delivery Truck using the `Delivery Truck` library from `CONNEX-AB-Delivery-System`.
-
 The project includes some tasks to reduce the time to deploy on your robot.
 
 Review the IP of your Brick and update the file `deploy.gradle`:
@@ -42,7 +41,7 @@ You can use the Java IDE to launch the task or execute them from the terminal
 
 LEGO brick is running on Debian-based operating system ev3dev: https://github.com/ev3dev (for more info see ev3dev links).
 
-AND programmed in JAVA: http://ev3dev-lang-java.github.io/#/. JAVA programms are deployed on brick by using Gradle,
+And is programmed in JAVA: http://ev3dev-lang-java.github.io/#/. JAVA programms are deployed on brick by using Gradle,
 to see how it is done, follow this link: http://ev3dev-lang-java.github.io/docs/support/getting_started/create-your-first-project.html.
 (also Git repo for example source code available here: https://github.com/ev3dev-lang-java/template_project_gradle).
 
@@ -70,11 +69,11 @@ https://github.com/ev3dev-lang-java/examples
 
 ## Sensors and Motors
 
-For ev3dev OS capabilities on EV3Brick and BrickPI3 you can read here: http://docs.ev3dev.org/en/ev3dev-jessie/
+For ev3dev OS capabilities on EV3Brick and BrickPI3, you can read here: http://docs.ev3dev.org/en/ev3dev-jessie/
 
-For sensor capabilities you can learn here: http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-jessie/sensor_data.html
+You can learn about sensor capabilities here: http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-jessie/sensor_data.html
 
-For motor capabilities you can learn here: http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-jessie/motor_data.html
+You can learn about sensor capabilities here: http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-jessie/motor_data.html
 
 Hint: value0 -> value(0) in Java.
 

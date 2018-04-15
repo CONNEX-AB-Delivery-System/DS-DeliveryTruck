@@ -4,12 +4,9 @@ import lejos.robotics.SampleProvider;
 import ev3dev.sensors.BaseSensor;
 import lejos.hardware.port.Port;
 import lejos.utility.Delay;
-//TODO: Do we need those imports?
 
 //import static base.DeliveryTruck.motorSteer;
 //import static base.DeliveryTruck.motorDrive;
-//TODO: Do we need those imports?
-
 
 /**
  *  Title: DTRun thread
@@ -23,7 +20,6 @@ class DTRun extends Thread {
     private String threadName;
 
 
-
     DTRun ( String threadName) {
         this.threadName = threadName;
         System.out.println("Creating " +  this.threadName );
@@ -32,9 +28,13 @@ class DTRun extends Thread {
     private boolean runMotors() {
 
         try {
+
             while (DeliveryTruck.isRunning && !DeliveryTruck.runThreadIsExecuted) {
 
-                System.out.println("Current value" + DeliveryTruck.lineReader.getPIDValue());
+                //DeliveryTruck.isRunning should be checked as often as possible
+                //to allow stop from SCS
+
+                //System.out.println("Current value" + DeliveryTruck.lineReader.getPIDValue());
 
                 System.out.println( "DTRun cmd " +  DeliveryTruck.inputCommandSCS );
                 Thread.sleep(500);
@@ -47,19 +47,16 @@ class DTRun extends Thread {
                 Thread.sleep(100);
 
                 /*DeliveryTruck.motorSteer.brake();
-                System.out.println("Steer right " +  this.threadName );
                 DeliveryTruck.motorSteer.setSpeed(100);
                 DeliveryTruck.motorSteer.forward();
                 Thread.sleep(200);
                 DeliveryTruck.motorSteer.stop();
 
-                System.out.println("Steer left " +  this.threadName );
                 DeliveryTruck.motorSteer.setSpeed(100);
                 DeliveryTruck.motorSteer.backward();
                 Thread.sleep(200);
                 DeliveryTruck.motorSteer.stop();
 
-                System.out.println("Drive motor " +  this.threadName );
                 DeliveryTruck.motorDrive.setSpeed(300);
                 DeliveryTruck.motorDrive.backward();
                 Thread.sleep(500);

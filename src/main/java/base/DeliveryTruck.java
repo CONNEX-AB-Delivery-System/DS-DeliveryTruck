@@ -11,8 +11,8 @@ import ev3dev.actuators.lego.motors.EV3MediumRegulatedMotor;
 
 import lejos.hardware.port.SensorPort;
 import ev3dev.sensors.ev3.EV3UltrasonicSensor;
+import ev3dev.sensors.ev3.EV3TouchSensor;
 
-//import lejos.hardware.sensor.MindsensorsLineLeader;
 import lejos.robotics.SampleProvider;
 import ev3dev.sensors.BaseSensor;
 import lejos.hardware.port.Port;
@@ -46,32 +46,28 @@ public class DeliveryTruck {
     static boolean runThreadIsStarted = false;
     static boolean runThreadIsExecuted = false;
 
-    //System.out.println("Creating Motor A & B");
-    //motor for drive forwards and backwards - connected to motor port A
+    //motor for drive forwards and backwards - connected to motor port D
     public static EV3LargeRegulatedMotor motorDrive;
-    //motor for steering - connected to motor port B
+    //motor for steering - connected to motor port C
     public static EV3MediumRegulatedMotor motorSteer;
-    //motor for crane rotation connected to motor port C
-    //private static EV3LargeRegulatedMotor craneRotation;
 
-    //motor multiplexer connected to sensor port S1
-    //motor for crane lifting - multiplexer port M1
-    //??
-    //motor for grabber - multiplexer port M1
-    //??
-    //TODO: FIX multiplexer controller..
+    //motor for crane lifting - connected multiplexer port M1
+    private static EV3LargeRegulatedMotor craneRotation;
+    //motor for crane lifting - connected to motor port B
+    public static EV3MediumRegulatedMotor craneLift;
+    //motor for grabber - connected to motor port A
+    public static EV3MediumRegulatedMotor craneGrabber;
 
-    //sensor for line reading - connected to sensor port TODO: S2
-    public static LineReaderV2 lineReader;
-    //sensor for proximity - connect to sensor port TODO: X
+    //sensor for proximity - connect to sensor port S1
     public static EV3UltrasonicSensor sensorProximity;
-    //sensor for crane rotation movement detection
+    //sensor for line reading - connected to sensor port S3
+    public static LineReaderV2 lineReader;
+    //sensor for crane rotation movement detection S4
     public static EV3TouchSensor touchSensor;
 
 
     public static void main(final String[] args) throws IOException {
-        // getting reference to Main thread
-        Thread t = Thread.currentThread();
+        DTRun runThread;
 
         double minVoltage = 7.200;
 
@@ -88,42 +84,62 @@ public class DeliveryTruck {
         motorSteer = new EV3MediumRegulatedMotor(MotorPort.A);
         System.out.println("Motor initialized");
         //initalize all sensors here
-        lineReader = new LineReaderV2(SensorPort.S1);
-        sensorProximity = new EV3UltrasonicSensor(SensorPort.S3);
+        //lineReader = new LineReaderV2(SensorPort.S1);
+        //sensorProximity = new EV3UltrasonicSensor(SensorPort.S3);
         //DeliveryTruck.sensorProximity.enable();
         System.out.println("Sensors initialized");
 
         //open thread for socket server to listen/send commands to SCS
         DTThreadPooledServer server = new DTThreadPooledServer("ServerThread-1", 8000);
-        new Thread(server).start();
+        server.start();
 
         while (isRunning) {
+            //first, check if have received "kill" command from SCS
+            if (inputCommandSCS.equals("KILL")) {
+                //then stop everything
+                //isRunning = false;
+            }
 
-            //check if have recieved command from SCS and have not executed run thread before
-            if (inputCommandSCS.equals("RUN") && (runThreadIsStarted == false)) {
-                //open thread for executing task
-                //TODO: start only after SCS has send command
-                DTRun runThread = new DTRun( "RunThread-1");
-                //runThread.setDaemon(false);
+            //check if have received "run" command from SCS and have not executed run thread before
+            if (inputCommandSCS.equals("RUN") && (!runThreadIsStarted)) {
+                //open thread for executing "run" task
+                runThread = new DTRun( "RunThread-1");
+                //add "run" task and "run executed" flags
+                runThreadIsExecuted = false;
                 runThreadIsStarted = true;
                 runThread.start();
             }
 
-            //wait till run thread is executed
-            if (runThreadIsExecuted == false) {
-                //TODO: not sure about this
+            //wait for some time till run thread is executed
+            if (!runThreadIsExecuted) {
                 try {
-                    //stop if no connection from SCS after 30 seconds
-                    Thread.sleep(1 * 1000);
-                    //DeliveryTruck.isRunning = false;
+                    Thread.sleep(10 * 100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            } else {
+                inputCommandSCS = "";
+                runThreadIsStarted = false;
             }
+
+            if (DeliveryTruck.outputCommandSCS.equals("FINISHED")) {
+
+                System.out.println("main-FINISHED");
+                server.isRunning();
+
+            }
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         }
 
+        //Stop server to release socket bind
         System.out.println("Stopping Server");
-        server.stop();
+        server.stopServerSocket();
 
         //motorSteer.close();
         //motorDrive.close();
@@ -132,41 +148,6 @@ public class DeliveryTruck {
 
 
         /*
-
-        String line;
-        while (isRunning) {
-            line = reader.readLine();
-            System.out.println("RECIEVED " + line);
-
-            switch (line) {
-                case "LEFT-PRESS":
-                    System.out.println("RECIEVED LEFT-PRESS " + line);
-                    motorSteer.rotate(180, true);
-                    //motorSteer.setAcceleration(50);
-                    //motorSteer.backward();
-                    break;
-                case "LEFT-RELEASE":
-                    motorSteer.stop(true);
-                    break;
-                case "RIGHT-PRESS":
-                    motorSteer.rotate(-180, true);
-                    //motorSteer.setSpeed(200);
-                    //motorSteer.setAcceleration(50);
-                    //motorSteer.forward();
-                    break;
-                case "RIGHT-RELEASE":
-                    motorSteer.stop(true);
-                    break;
-                case "STOP":
-                    isRunning = false;
-                    outputValue = "shutting down";
-                    writer.write(outputValue+"\n");writer.flush();
-                    break;
-            }
-        }
-
-
-
         int distanceValue = 0;
 
         String name;
@@ -201,19 +182,14 @@ public class DeliveryTruck {
 
 
         //TODO:To Stop the motor in case of pkill java for example
-       /*Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+       Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
                 System.out.println("Emergency Stop");
                 DeliveryTruck.motorDrive.stop();
                 DeliveryTruck.motorSteer.stop();
-                DeliveryTruck.sensorProximity.disable();
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
             }
-        })); */
+        }));
 
     }
 }

@@ -35,7 +35,6 @@ public class DeliveryTruck {
     //Configuration
     private static int HALF_SECOND = 500;
 
-    //TODO: synhronize isRunning variable between threads
     //Synchronization variables between threads to allow intra thread communication
     //Main variable for stopping execution
     static boolean isRunning = true;
@@ -66,7 +65,7 @@ public class DeliveryTruck {
     public static EV3TouchSensor touchSensor;
 
 
-    public static void main(final String[] args) throws IOException {
+    public static void main(final String[] args) {
         DTRun runThread;
 
         double minVoltage = 7.200;
@@ -79,11 +78,11 @@ public class DeliveryTruck {
             System.exit(0);
         }
 
-        //initalize all motors here
+        //initialize all motors here
         motorDrive = new EV3LargeRegulatedMotor(MotorPort.C);
         motorSteer = new EV3MediumRegulatedMotor(MotorPort.A);
         System.out.println("Motor initialized");
-        //initalize all sensors here
+        //initialize all sensors here
         //lineReader = new LineReaderV2(SensorPort.S1);
         //sensorProximity = new EV3UltrasonicSensor(SensorPort.S3);
         //DeliveryTruck.sensorProximity.enable();

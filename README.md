@@ -16,33 +16,37 @@ To run software you need following things:
 
 ## How to run your code on truck (when you have access to truck in Lab)
 
-The project includes latest dependencies and
-an example ready to be deployed on Delivery Truck using the `Delivery Truck` library from `CONNEX-AB-Delivery-System`.
-The project includes some tasks to reduce the time to deploy on your robot.
+The project includes latest dependencies and an example ready to be deployed on Delivery Truck using the `Delivery Truck` library from `CONNEX-AB-Delivery-System`. The project includes some tasks to reduce the time to deploy on your robot.
 
-Review the IP of your Brick and update the file `deploy.gradle`:
+Steps to connect to Truck: 
+1) switch on Truck and wait for OS to load
+2) Check the IP of Truck (by default for this truck it should be 192.168.122.94 - if not, update the file `deploy.gradle`):
+3) Connect your computer 
 
 ```
 remotes {
     ev3dev {
-        host = '192.168.1.180'
+        host = '192.168.122.94'
         user = 'robot'
         password = 'maker'
     }
 }
 ```
 
-The tasks associated to deploy on your robot are:
+4) Connect your computer network to BTH (you don't need to login into this network, just connect). 
+5) Now you can use the Java IDE to launch the task or execute them from the terminal
+
+```
+./gradlew deployAndRun
+```
+
+5b) Some other tasks associated to deploy on your robot are:
 
 - deploy (The project deliver a FatJar to your Brick)
 - remoteRun (Execute a jar deployed on your Brick)
 - deployAndRun (Deploy & Execute from your Computer the program that you configured on the file: MANIFEST.MF)
 
-You can use the Java IDE to launch the task or execute them from the terminal
-
-```
-./gradlew deployAndRun
-```
+6) Open SCS software, type in IP of Truck, push Connect. After SCS shows it has been conected to Truck, type in command "run" and Truck will start to do things you developed. Once done, type in command "kill" to stop software on Truck. 
 
 # Documenatation of system
 

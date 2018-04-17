@@ -6,8 +6,17 @@ This repository stores a template project about `Delivery Truck`. You will use t
 
 ## Getting Started
 
-Once you download in your computer the project, open Java IDE [IntelliJ](https://www.jetbrains.com/idea/))
-to import this [Gradle](https://gradle.org/) project. The project includes latest dependencies and
+To develop software you need following things: 
+- Development tools installed as per instructions (IntelliJIDEA and Git/GitHub/SourceTree are must, Gradle is optional).
+- Learn (reading provided documentation) about capabilities of motors and sensors and how you can control them with your Java code. See section: Documenatation of system for links to this documentation and to see different code examples. 
+
+To run software you need following things: 
+- Your truck (this is where your software will execute - not on your computer!) 
+- One computer per team with all development tools installed (here Gradle is necessary as well). 
+
+## How to run your code on truck (when you have access to truck in Lab)
+
+The project includes latest dependencies and
 an example ready to be deployed on Delivery Truck using the `Delivery Truck` library from `CONNEX-AB-Delivery-System`.
 The project includes some tasks to reduce the time to deploy on your robot.
 
@@ -35,9 +44,9 @@ You can use the Java IDE to launch the task or execute them from the terminal
 ./gradlew deployAndRun
 ```
 
-# General help info
+# Documenatation of system
 
-## Getting Started
+## General information
 
 LEGO brick is running on Debian-based operating system ev3dev: https://github.com/ev3dev (for more info see ev3dev links).
 
@@ -58,8 +67,6 @@ And classes: EV3ColorSensor, EV3IRSensor, EV3TouchSensor, EV3UltrasonicSensor <b
 
 You mostly will use EV3 Motors in package: ev3dev.actuators.lego.motors <br />
 And classes: EV3LargeRegulatedMotor, EV3MediumRegulatedMotor
-
-
 
 ## Examples
 

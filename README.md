@@ -1,4 +1,4 @@
-# Package Handling System / Delivery Truck project with Gradle
+# Delivery System / Delivery Truck project with Gradle
 
 ## About this project
 

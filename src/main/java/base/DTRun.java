@@ -36,6 +36,8 @@ class DTRun extends Thread {
 
                 //TODO: YOUR CODE HERE
 
+                int value = DeliveryTruck.lineReader.getPIDValue();
+
                 //System.out.println("Current value" + DeliveryTruck.lineReader.getPIDValue());
 
                 System.out.println( "DTRun cmd " +  DeliveryTruck.inputCommandSCS );

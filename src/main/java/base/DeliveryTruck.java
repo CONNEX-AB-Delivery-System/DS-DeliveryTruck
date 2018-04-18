@@ -79,20 +79,28 @@ public class DeliveryTruck {
         }
 
         //initialize all motors here
-        motorDrive = new EV3LargeRegulatedMotor(MotorPort.C);
-        motorSteer = new EV3MediumRegulatedMotor(MotorPort.A);
+        motorDrive = new EV3MediumRegulatedMotor(MotorPort.D);
+        motorSteer = new EV3MediumRegulatedMotor(MotorPort.C);
         System.out.println("Motor initialized");
         //initialize all sensors here
-        //lineReader = new LineReaderV2(SensorPort.S1);
+        lineReader = new LineReaderV2(SensorPort.S3);
         //sensorProximity = new EV3UltrasonicSensor(SensorPort.S3);
         //DeliveryTruck.sensorProximity.enable();
         System.out.println("Sensors initialized");
 
-        //open thread for socket server to listen/send commands to SCS
-        DTThreadPooledServer server = new DTThreadPooledServer("ServerThread-1", 8000);
-        server.start();
+        //open thread for executing "run" task
+        runThread = new DTRun( "RunThread-1");
+        //add "run" task and "run executed" flags
+        runThreadIsExecuted = false;
+        runThreadIsStarted = true;
+        runThread.start();
 
-        while (isRunning) {
+
+        //open thread for socket server to listen/send commands to SCS
+        //DTThreadPooledServer server = new DTThreadPooledServer("ServerThread-1", 8000);
+        //server.start();
+
+        /*while (isRunning) {
             //first, check if have received "kill" command from SCS
             if (inputCommandSCS.equals("KILL")) {
                 //then stop everything
@@ -138,10 +146,20 @@ public class DeliveryTruck {
 
         //Stop server to release socket bind
         System.out.println("Stopping Server");
-        server.stopServerSocket();
+        server.stopServerSocket(); */
 
-        //motorSteer.close();
-        //motorDrive.close();
+        //wait for some time till run thread is executed
+        if (!runThreadIsExecuted) {
+            try {
+                Thread.sleep(10 * 100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        } else {
+            inputCommandSCS = "";
+            runThreadIsStarted = false;
+            isRunning = false;
+        }
 
         System.exit(0);
 

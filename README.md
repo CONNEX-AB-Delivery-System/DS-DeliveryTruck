@@ -46,7 +46,7 @@ remotes {
 - remoteRun (Execute a jar deployed on your Brick)
 - deployAndRun (Deploy & Execute from your Computer the program that you configured on the file: MANIFEST.MF)
 
-# About CSLTruck
+# About Delivery Truck
 
 
 motors

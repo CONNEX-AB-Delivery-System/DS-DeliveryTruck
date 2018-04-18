@@ -47,7 +47,7 @@ public class DeliveryTruck {
     static boolean runThreadIsExecuted = false;
 
     //motor for drive forwards and backwards - connected to motor port D
-    public static EV3LargeRegulatedMotor motorDrive;
+    public static EV3MediumRegulatedMotor motorDrive;
     //motor for steering - connected to motor port C
     public static EV3MediumRegulatedMotor motorSteer;
 
@@ -76,11 +76,12 @@ public class DeliveryTruck {
         System.out.println("Battery Current: " + Battery.getInstance().getBatteryCurrent());
         if (Battery.getInstance().getVoltage() < minVoltage) {
             System.out.println("Battery voltage to low, shutdown");
+            System.out.println("Please change the batteries");
             System.exit(0);
         }
 
         //initialize all motors here
-        motorDrive = new EV3MediumRegulatedMotor(MotorPort.D);
+        motorDrive = new EV3MediumRegulatedMotor(MotorPort.B);
         motorSteer = new EV3MediumRegulatedMotor(MotorPort.C);
         //TODO: Uncomment if you are using this motor
         //craneLift = new EV3MediumRegulatedMotor(MotorPort.B);
@@ -103,16 +104,18 @@ public class DeliveryTruck {
         runThread.start();
 
         //wait for some time till run thread is executed
-        if (!runThreadIsExecuted) {
-            try {
-                Thread.sleep(10 * 100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        while (isRunning) {
+            if (!runThreadIsExecuted) {
+                try {
+                    Thread.sleep(10 * 100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                inputCommandSCS = "";
+                runThreadIsStarted = false;
+                isRunning = false;
             }
-        } else {
-            inputCommandSCS = "";
-            runThreadIsStarted = false;
-            isRunning = false;
         }
 
         System.exit(0);

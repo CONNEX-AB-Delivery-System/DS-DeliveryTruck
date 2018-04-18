@@ -39,33 +39,16 @@ class DTRun extends Thread {
                 //TODO: AND HOW TO WRITE CODE:
                 //https://github.com/CONNEX-AB-Delivery-System/DS-DeliveryTruck/blob/master/README.md
 
-                System.out.println("LineReader value" + DeliveryTruck.lineReader.getPIDValue());
+                //System.out.println("LineReader value" + DeliveryTruck.lineReader.getPIDValue());
 
-                System.out.println( "DTRun cmd " +  DeliveryTruck.inputCommandSCS );
-                Thread.sleep(500);
-
-                System.out.println("Rotate motor " +  this.threadName );
-                DeliveryTruck.motorSteer.rotateTo(15, true);
-                Thread.sleep(500);
-                System.out.println("Rotate motor 2 " +  this.threadName );
-                DeliveryTruck.motorSteer.rotateTo(-20, true);
-                Thread.sleep(100);
-
-                /*DeliveryTruck.motorSteer.brake();
-                DeliveryTruck.motorSteer.setSpeed(100);
-                DeliveryTruck.motorSteer.forward();
-                Thread.sleep(200);
-                DeliveryTruck.motorSteer.stop();
-
-                DeliveryTruck.motorSteer.setSpeed(100);
-                DeliveryTruck.motorSteer.backward();
-                Thread.sleep(200);
-                DeliveryTruck.motorSteer.stop();
-
+                //System.out.println("Rotate motor " +  this.threadName );
                 DeliveryTruck.motorDrive.setSpeed(300);
-                DeliveryTruck.motorDrive.backward();
-                Thread.sleep(500);
-                DeliveryTruck.motorDrive.stop();*/
+                DeliveryTruck.motorDrive.forward();
+
+                Thread.sleep(2000);
+
+                DeliveryTruck.motorDrive.stop(true);
+
 
                 DeliveryTruck.runThreadIsExecuted = true;
                 DeliveryTruck.outputCommandSCS = "FINISHED";

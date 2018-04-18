@@ -35,10 +35,11 @@ class DTRun extends Thread {
                 //to allow stop from SCS
 
                 //TODO: YOUR CODE HERE
+                //TODO: CHECK THIS DOCUMENTATION TO UNDERSTAND HOW TO RUN THIS TRUCK
+                //TODO: AND HOW TO WRITE CODE:
+                //https://github.com/CONNEX-AB-Delivery-System/DS-DeliveryTruck/blob/master/README.md
 
-                int value = DeliveryTruck.lineReader.getPIDValue();
-
-                //System.out.println("Current value" + DeliveryTruck.lineReader.getPIDValue());
+                System.out.println("LineReader value" + DeliveryTruck.lineReader.getPIDValue());
 
                 System.out.println( "DTRun cmd " +  DeliveryTruck.inputCommandSCS );
                 Thread.sleep(500);

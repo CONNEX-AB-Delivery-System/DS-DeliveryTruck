@@ -17,6 +17,7 @@ import lejos.robotics.SampleProvider;
 import ev3dev.sensors.BaseSensor;
 import lejos.hardware.port.Port;
 import lejos.utility.Delay;
+import sun.management.Sensor;
 
 /**
  * Title: DeliveryTruck
@@ -81,10 +82,16 @@ public class DeliveryTruck {
         //initialize all motors here
         motorDrive = new EV3MediumRegulatedMotor(MotorPort.D);
         motorSteer = new EV3MediumRegulatedMotor(MotorPort.C);
+        //TODO: Uncomment if you are using this motor
+        //craneLift = new EV3MediumRegulatedMotor(MotorPort.B);
+        //TODO: Uncomment if you are using this motor
+        //craneGrabber = new EV3MediumRegulatedMotor(MotorPort.A);
         System.out.println("Motor initialized");
         //initialize all sensors here
         lineReader = new LineReaderV2(SensorPort.S3);
-        //sensorProximity = new EV3UltrasonicSensor(SensorPort.S3);
+        //sensorProximity = new EV3UltrasonicSensor(SensorPort.S1);
+        //TODO: Uncomment if you are using this sensor
+        //touchSensor = new EV3TouchSensor(SensorPort.S4);
         //DeliveryTruck.sensorProximity.enable();
         System.out.println("Sensors initialized");
 
@@ -95,6 +102,20 @@ public class DeliveryTruck {
         runThreadIsStarted = true;
         runThread.start();
 
+        //wait for some time till run thread is executed
+        if (!runThreadIsExecuted) {
+            try {
+                Thread.sleep(10 * 100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        } else {
+            inputCommandSCS = "";
+            runThreadIsStarted = false;
+            isRunning = false;
+        }
+
+        System.exit(0);
 
         //open thread for socket server to listen/send commands to SCS
         //DTThreadPooledServer server = new DTThreadPooledServer("ServerThread-1", 8000);
@@ -148,20 +169,7 @@ public class DeliveryTruck {
         System.out.println("Stopping Server");
         server.stopServerSocket(); */
 
-        //wait for some time till run thread is executed
-        if (!runThreadIsExecuted) {
-            try {
-                Thread.sleep(10 * 100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        } else {
-            inputCommandSCS = "";
-            runThreadIsStarted = false;
-            isRunning = false;
-        }
-
-        System.exit(0);
+        //System.exit(0);
 
 
         /*

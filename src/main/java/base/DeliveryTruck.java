@@ -17,7 +17,6 @@ import lejos.robotics.SampleProvider;
 import ev3dev.sensors.BaseSensor;
 import lejos.hardware.port.Port;
 import lejos.utility.Delay;
-import sun.management.Sensor;
 
 /**
  * Title: DeliveryTruck
@@ -107,7 +106,7 @@ public class DeliveryTruck {
         while (isRunning) {
             if (!runThreadIsExecuted) {
                 try {
-                    Thread.sleep(10 * 100);
+                    Thread.sleep(10 * 1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

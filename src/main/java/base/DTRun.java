@@ -49,6 +49,13 @@ class DTRun extends Thread {
 
                 DeliveryTruck.motorDrive.stop(true);
 
+                DeliveryTruck.motorDrive.setSpeed(300);
+                DeliveryTruck.motorDrive.backward();
+
+                Thread.sleep(2000);
+
+                DeliveryTruck.motorDrive.stop(true);
+
 
                 DeliveryTruck.runThreadIsExecuted = true;
                 DeliveryTruck.outputCommandSCS = "FINISHED";

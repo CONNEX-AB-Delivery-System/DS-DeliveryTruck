@@ -103,14 +103,16 @@ public class DeliveryTruck {
         runThread.start();
 
         //wait for some time till run thread is executed
-        while (isRunning) {
-            if (!runThreadIsExecuted) {
-                try {
-                    Thread.sleep(10 * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            } else {
+        while (!runThreadIsExecuted)
+        {
+            System.out.println("thread exe" + runThreadIsExecuted);
+            try {
+                Thread.sleep(10 * 100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (runThreadIsExecuted) {
                 inputCommandSCS = "";
                 runThreadIsStarted = false;
                 isRunning = false;

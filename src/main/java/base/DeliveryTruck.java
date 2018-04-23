@@ -46,7 +46,7 @@ public class DeliveryTruck {
     static boolean runThreadIsExecuted = false;
 
     //motor for drive forwards and backwards - connected to motor port D
-    public static EV3LargeRegulatedMotor motorDrive;
+    public static EV3MediumRegulatedMotor motorDrive;
     //motor for steering - connected to motor port C
     public static EV3MediumRegulatedMotor motorSteer;
 
@@ -75,24 +75,57 @@ public class DeliveryTruck {
         System.out.println("Battery Current: " + Battery.getInstance().getBatteryCurrent());
         if (Battery.getInstance().getVoltage() < minVoltage) {
             System.out.println("Battery voltage to low, shutdown");
+            System.out.println("Please change the batteries");
             System.exit(0);
         }
 
         //initialize all motors here
-        motorDrive = new EV3LargeRegulatedMotor(MotorPort.C);
-        motorSteer = new EV3MediumRegulatedMotor(MotorPort.A);
+        motorDrive = new EV3MediumRegulatedMotor(MotorPort.B);
+        motorSteer = new EV3MediumRegulatedMotor(MotorPort.C);
+        //TODO: Uncomment if you are using this motor
+        //craneLift = new EV3MediumRegulatedMotor(MotorPort.B);
+        //TODO: Uncomment if you are using this motor
+        //craneGrabber = new EV3MediumRegulatedMotor(MotorPort.A);
         System.out.println("Motor initialized");
         //initialize all sensors here
-        //lineReader = new LineReaderV2(SensorPort.S1);
-        //sensorProximity = new EV3UltrasonicSensor(SensorPort.S3);
+        lineReader = new LineReaderV2(SensorPort.S3);
+        //sensorProximity = new EV3UltrasonicSensor(SensorPort.S1);
+        //TODO: Uncomment if you are using this sensor
+        //touchSensor = new EV3TouchSensor(SensorPort.S4);
         //DeliveryTruck.sensorProximity.enable();
         System.out.println("Sensors initialized");
 
-        //open thread for socket server to listen/send commands to SCS
-        DTThreadPooledServer server = new DTThreadPooledServer("ServerThread-1", 8000);
-        server.start();
+        //open thread for executing "run" task
+        runThread = new DTRun( "RunThread-1");
+        //add "run" task and "run executed" flags
+        runThreadIsExecuted = false;
+        runThreadIsStarted = true;
+        runThread.start();
 
-        while (isRunning) {
+        //wait for some time till run thread is executed
+        while (!runThreadIsExecuted)
+        {
+            System.out.println("thread exe" + runThreadIsExecuted);
+            try {
+                Thread.sleep(10 * 100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (runThreadIsExecuted) {
+                inputCommandSCS = "";
+                runThreadIsStarted = false;
+                isRunning = false;
+            }
+        }
+
+        System.exit(0);
+
+        //open thread for socket server to listen/send commands to SCS
+        //DTThreadPooledServer server = new DTThreadPooledServer("ServerThread-1", 8000);
+        //server.start();
+
+        /*while (isRunning) {
             //first, check if have received "kill" command from SCS
             if (inputCommandSCS.equals("KILL")) {
                 //then stop everything
@@ -138,12 +171,9 @@ public class DeliveryTruck {
 
         //Stop server to release socket bind
         System.out.println("Stopping Server");
-        server.stopServerSocket();
+        server.stopServerSocket(); */
 
-        //motorSteer.close();
-        //motorDrive.close();
-
-        System.exit(0);
+        //System.exit(0);
 
 
         /*

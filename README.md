@@ -1,4 +1,4 @@
-# Package Handling System / Delivery Truck project with Gradle
+# Delivery System / Delivery Truck project with Gradle
 
 ## About this project
 
@@ -6,38 +6,62 @@ This repository stores a template project about `Delivery Truck`. You will use t
 
 ## Getting Started
 
-Once you download in your computer the project, open Java IDE [IntelliJ](https://www.jetbrains.com/idea/))
-to import this [Gradle](https://gradle.org/) project. The project includes latest dependencies and
-an example ready to be deployed on Delivery Truck using the `Delivery Truck` library from `CONNEX-AB-Delivery-System`.
-The project includes some tasks to reduce the time to deploy on your robot.
+To develop software you need following things: 
+- Development tools installed as per instructions (IntelliJIDEA and Git/GitHub/SourceTree are must, Gradle is optional).
+- Learn (reading provided documentation) about capabilities of motors and sensors and how you can control them with your Java code. See section: Documenatation of system for links to this documentation and to see different code examples. 
 
-Review the IP of your Brick and update the file `deploy.gradle`:
+To run software you need following things: 
+- Your truck (this is where your software will execute - not on your computer!) 
+- One computer per team with all development tools installed (here Gradle is necessary as well). 
+
+## How to run your code on truck (when you have access to truck in Lab)
+
+The project includes latest dependencies and an example ready to be deployed on Delivery Truck using the `Delivery Truck` library from `CONNEX-AB-Delivery-System`. The project includes some tasks to reduce the time to deploy on your robot.
+
+Steps to connect to Truck: 
+1) switch on Truck and wait for OS to load
+2) Check the IP of Truck (by default for this truck it should be 192.168.123.136 - if not, update the file `config.gradle`):
 
 ```
 remotes {
     ev3dev {
-        host = '192.168.1.180'
+        host = '192.168.123.136
         user = 'robot'
         password = 'maker'
     }
 }
 ```
-
-The tasks associated to deploy on your robot are:
-
-- deploy (The project deliver a FatJar to your Brick)
-- remoteRun (Execute a jar deployed on your Brick)
-- deployAndRun (Deploy & Execute from your Computer the program that you configured on the file: MANIFEST.MF)
-
-You can use the Java IDE to launch the task or execute them from the terminal
+3) Open Terminal or Command Line. Locate to Project file folder (use command cd ).
+4) Connect your computer network to BTH (you don't need to login into this network, just connect). 
+5) Now you can use the Java IDE to launch the task or execute them from the terminal
 
 ```
 ./gradlew deployAndRun
 ```
 
-# General help info
+5b) Some other tasks associated to deploy on your robot are:
 
-## Getting Started
+- deploy (The project deliver a FatJar to your Brick)
+- remoteRun (Execute a jar deployed on your Brick)
+- deployAndRun (Deploy & Execute from your Computer the program that you configured on the file: MANIFEST.MF)
+
+# About Delivery Truck
+
+
+motors
+- [one EV3 Medium Motor] for driving to run rear wheel drive system. Documentation here: <a href="http://ev3dev-lang-java.github.io/docs/api/latest/ev3dev-lang-java/ev3dev/actuators/lego/motors/EV3MediumRegulatedMotor.html">Javadocs</a>
+- [one EV3 Medium Motor] for steering to run front wheel steering system. Documentation here: <a href="http://ev3dev-lang-java.github.io/docs/api/latest/ev3dev-lang-java/ev3dev/actuators/lego/motors/EV3MediumRegulatedMotor.html">Javadocs</a>
+- [one EV3 Large Motor] for rotating crane. Documentation here: <a href="http://ev3dev-lang-java.github.io/docs/api/latest/ev3dev-lang-java/ev3dev/actuators/lego/motors/EV3LargeRegulatedMotor.html">Javadocs</a>
+- [one EV3 Large Motor] for lifting crane. Documentation here: <a href="http://ev3dev-lang-java.github.io/docs/api/latest/ev3dev-lang-java/ev3dev/actuators/lego/motors/EV3LargeRegulatedMotor.html">Javadocs</a>
+- [one EV3 Medium Motor] for grabbing container. Documentation here: <a href="http://ev3dev-lang-java.github.io/docs/api/latest/ev3dev-lang-java/ev3dev/actuators/lego/motors/EV3MediumRegulatedMotor.html">Javadocs</a>
+
+sensors
+- [one EV3 Ultrasonic Sensor] for measuring distance to detect obstacles. Documentation here: <a href="http://ev3dev-lang-java.github.io/docs/api/latest/ev3dev-lang-java/ev3dev/sensors/ev3/EV3UltrasonicSensor.html">Javadocs</a> and <a href="http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-jessie/sensor_data.html#lego-ev3-us">Sensor capabilities</a>
+- [one mindstormsLineReaderV2 Sensor Line] for measuring line reflection to follow the line. Documentation here: <a href="https://github.com/CONNEX-AB-Delivery-System/DS-CSLTruck/blob/master/src/main/java/base/LineReaderV2.java">Javadocs</a> and <a href="http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-jessie/sensor_data.html#ms-line-leader">Sensor capabilities</a> 
+
+# Documenatation of system
+
+## General information
 
 LEGO brick is running on Debian-based operating system ev3dev: https://github.com/ev3dev (for more info see ev3dev links).
 
@@ -45,9 +69,15 @@ And is programmed in JAVA: http://ev3dev-lang-java.github.io/#/. JAVA programms 
 to see how it is done, follow this link: http://ev3dev-lang-java.github.io/docs/support/getting_started/create-your-first-project.html.
 (also Git repo for example source code available here: https://github.com/ev3dev-lang-java/template_project_gradle).
 
-## Modify the example
+## Examples
 
-In order to modify the example, current full APIs are:
+Exist several examples ready to use here:
+
+https://github.com/ev3dev-lang-java/examples
+
+Another Git repo for example source code available here: https://github.com/ev3dev-lang-java/template_project_gradle).
+
+In order to modify examples, current full APIs are:
 
 http://ev3dev-lang-java.github.io/docs/api/latest/index.html
 
@@ -58,14 +88,6 @@ And classes: EV3ColorSensor, EV3IRSensor, EV3TouchSensor, EV3UltrasonicSensor <b
 
 You mostly will use EV3 Motors in package: ev3dev.actuators.lego.motors <br />
 And classes: EV3LargeRegulatedMotor, EV3MediumRegulatedMotor
-
-
-
-## Examples
-
-Exist several examples ready to use here:
-
-https://github.com/ev3dev-lang-java/examples
 
 ## Sensors and Motors
 
